@@ -159,16 +159,16 @@ apikey = config.dictionary['apikey']
 #             time.sleep(1)
 
 class Timer(threading.Thread):
-    def __init__(self, seconds):
+    def __init__(self):
         super(Timer, self).__init__()
         self.elapsed = 0
         self.tempcurrent = 0
-        self.seconds = seconds
+        self.tempcurrent2 = 0
         self.buffer = 0
         self.tempstart = time.time()
         self.timing = []
         self.previousTime = 0
-        self.sleep = False
+        self.stop = False
     
     def bufferTime(self, buffer):
         self.buffer = buffer
@@ -182,11 +182,15 @@ class Timer(threading.Thread):
     def resetTiming(self):
         self.tempcurrent = 0
         
+    def reset(self):
+        self.tempcurrent = 0
+        self.buffer = 0
+        del self.timing[:]
+        
     def indicator(self):
         if len(self.timing) <= 0:
             remainingTime = self.buffer - self.tempcurrent
             if remainingTime > 0:
-                print("remaining time:", remainingTime)
                 print("\nWaiting remaining", remainingTime, "seconds")
                 time.sleep(remainingTime)
             self.previousTime = 0
@@ -201,93 +205,165 @@ class Timer(threading.Thread):
         return 2
     
     def run(self):
-        while self.elapsed < self.seconds:
+        while self.stop == False:
             time.sleep(1)
             self.elapsed += 1
-            if self.sleep == False:
-                self.tempcurrent += 1
+            self.tempcurrent += 1
+            self.tempcurrent2 += 1
+            print("Elapsed:", self.elapsed, "Current", self.tempcurrent)
+        return
             
 if __name__ == "__main__":
     Login = RetrieveUser()
     alluser = Login.retrieveAll()
-    
-    timer = Timer(43200)
+     
+    timer = Timer()
     timer.start()
-    
+     
     timings = []
     timings.append([10, 40])                 # 0-1  mins
     timings.append([15, 30, 45, 60])         # 1-2  mins
     timings.append([10, 20, 30, 40, 50, 60]) # 2-3  mins
     timings.append([270, 540])               # 3-12 mins
-    
+     
     index = 0
     bufferTime = 60
     timer.bufferTime(bufferTime)
-    
+     
     timer.setTiming(timings[0])
     
-    maxtime = 720
-    
-    print("Start")
-    
+    maxtime = []
+    maxtime.append(720)
+    maxtime.append(3600)
+    maxtime.append(12*60*60)
+    maxtimeindex = 0
+     
     numoffollower = 0
     lengthOfFollower = 0
     
+    print("Start")
+     
     # First hour
     while True:
-        while timer.elapsed < maxtime+1:
-            if len(alluser) == 0:
-                print("All user followed")
-                break
-            
-            result = timer.indicator()
-            
-            if result == 0:
-                # Get rand user and login
-                randindex = randint(1, len(alluser))
-                randloginuser = Login.retrieveIndividual(randindex)
-                #Login.removeIndividual(randloginuser)
-                #api.loginUser(randloginuser['email'], randloginuser['password'])
-                     
-                # Follow user
-                print(randloginuser['firstname'] + " followed random user")
-                numoffollower+=1
-                print("Followers:", numoffollower)
-                #api.followUser("123")
-                #api.logoutUser()
-            elif result == 1:
-                index += 1
-                if index >= len(timings):
-                    index = 0
-                    
-                timer.setTiming(timings[index])
-                print("Time elapsed:", timer.elapsed)
-                print("Done, continuing with next minute")
-            
-            if len(timer.timing) != 0:
-                if lengthOfFollower != len(timer.timing):
-                    lengthOfFollower = len(timer.timing)
-                    print("\nWaiting",  timer.timing[0] - timer.previousTime, "seconds until", timer.timing[0], "seconds")
-                    timer.previousTime = timer.timing[0]
-        
-        if timer.elapsed < 3600:
+        if len(alluser) == 0:
+            print("All user followed")
+            break    
+
+        if timer.tempcurrent2 >= maxtime[maxtimeindex]:
             index = 0
-            maxtime = 3600
-            bufferTime = 720
-            timer.bufferTime(bufferTime)
 
             del timings[:]
-            timings.append([180, 360, 540, 720])            # 12-24 48-60 # 12 mins
-            timings.append([120, 240, 360, 480, 600, 720])  # 24-36       # 12 mins
-            timings.append([360, 720])                      # 36-48       # 12 mins
+            if maxtimeindex == 0:    
+                timings.append([180, 360, 540, 720])            # 12-24 48-60 # 12 mins
+                timings.append([120, 240, 360, 480, 600, 720])  # 24-36       # 12 mins
+                timings.append([360, 720])                      # 36-48       # 12 mins  
+                maxtimeindex += 1
+            elif maxtime == 1:
+                timings.append([3600, 3600, 3600, 3600, 3600, 3600,
+                                3600, 3600, 3600, 3600, 3600])
+                maxtimeindex += 1
+            elif maxtimeindex == 2:
+                timer.tempcurrent2 = 0
+                randomfollowersnum = randint(5, 10)
+                
+                timing = []
+                dividedtime = int(maxtime[maxtimeindex] / randomfollowersnum)
+                for time in range(randomfollowersnum):
+                    timing.append(dividedtime)
+                
+                timings.append(timing)
+            
+            bufferTime = maxtime[maxtimeindex]
+            timer.bufferTime(bufferTime)
+            
             timer.setTiming(timings[0])
             timer.resetTiming()
-            print("First 12 minutes done")
-        else:
-            break
-    
-    print("Finished 1st hour")
+            
+#         while timer.elapsed >= maxtime:
+#             if timer.elapsed < 3600:
+#                 print("First 12 minutes done")  
+#                 index = 0
+#                 maxtime = 3600
+#                 bufferTime = 720
+#                 timer.bufferTime(bufferTime)
+#             
+#                 del timings[:]
+#                 timings.append([180, 360, 540, 720])            # 12-24 48-60 # 12 mins
+#                 timings.append([120, 240, 360, 480, 600, 720])  # 24-36       # 12 mins
+#                 timings.append([360, 720])                      # 36-48       # 12 mins
+#                 timer.setTiming(timings[0])
+#                 timer.resetTiming()
+#             elif timer.elapsed > 3600+1:
+#                 print("First hour done")
+#                 index = 0
+#                 maxtime = 11 * 60 * 60
+#                 bufferTime = 1 * 60 * 60
+#                 timer.bufferTime(bufferTime)
+#                 
+#                 del timings[:]
+#                 timings.append([3600, 3600, 3600, 3600, 3600, 3600,
+#                                 3600, 3600, 3600, 3600, 3600])
+#                 timer.setTiming(timings[0])
+#                 timer.resetTiming()
+
+        result = timer.indicator()
         
+        if result == 0:
+            # Get rand user and login
+            randindex = randint(1, len(alluser))
+            randloginuser = Login.retrieveIndividual(randindex)
+            #Login.removeIndividual(randloginuser)
+            #api.loginUser(randloginuser['email'], randloginuser['password'])
+                  
+            # Follow user
+            print(randloginuser['firstname'] + " followed random user")
+            numoffollower+=1
+            print("Followers:", numoffollower)
+            #api.followUser("123")
+            #api.logoutUser()
+        elif result == 1:
+            index += 1
+            if index >= len(timings):
+                index = 0
+                 
+            timer.setTiming(timings[index])
+            print("Time elapsed:", timer.elapsed)
+            print("Done, continuing with next minute")
+        
+        if len(timer.timing) != 0:
+            if lengthOfFollower != len(timer.timing):
+                lengthOfFollower = len(timer.timing)
+                print("\nWaiting",  timer.timing[0] - timer.previousTime, "seconds until", timer.timing[0], "seconds")
+            timer.previousTime = timer.timing[0]
+    
+    timer.stop = True
+    
+#     maxtime = 11 * 60 * 60
+#     bufferTime = 1 * 60 * 60
+#     timer.bufferTime(bufferTime)
+#     timings.append([3600, 3600, 3600, 3600, 3600, 3600,
+#                     3600, 3600, 3600, 3600, 3600])   
+#      
+#     while timer.elapsed < maxtime+1:
+#         result = timer.indicator()
+#          
+#         if result == 0:
+#             randindex = randint(1, len(alluser))
+#             randloginuser = Login.retrieveIndividual(randindex)
+#             #Login.removeIndividual(randloginuser)
+#             #api.loginUser(randloginuser['email'], randloginuser['password'])        
+#                       
+#             print(randloginuser['firstname'] + " followed random user")
+#             numoffollower+=1
+#             print("Followers:", numoffollower)
+#             #api.followUser("123")
+#             #api.logoutUser()
+#      
+#     print("First day done")
+# 
+#     randomnumfollowers = randint(5, 10)
+#     print(randomnumfollowers)
+    
 #     Login = RetrieveUser()
 #     timer = Stopwatch(43200)
 #     
@@ -330,8 +406,8 @@ if __name__ == "__main__":
 #                     
 #                 timer.setTiming(timing[index])
 #                 print("Done\n")
-#                 break
-                
+#                 break    
+#       
 #     Login = RetrieveUser()
 #     Follow = RetrieveUser()
 #     
