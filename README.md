@@ -22,6 +22,7 @@ api.loginUser("email", "password")
 ```
  
 **Authenticating a user for RandomAPI**
+
 Authenticating with RandomAPI allows for more data retrieval from randomuser.me
 [Register](https://randomapi.com/) and get the API key from RandomAPI
 Save API key into config.ini file
@@ -81,6 +82,7 @@ for user in users:
 **Classes & Functions**
 -------------
 **Timer class**
+
 Threaded timer class to run asynchronously with main function
 
 ```
@@ -92,6 +94,7 @@ run()
 ```
 
 **PresentFollows class**
+
 Threading follow class to run asynchronously with like class (See below for like class)
 
 ```
@@ -102,6 +105,7 @@ run()
 **How it works**
 ----------------
 **Main function**
+
 The indicator will check whether to wait or to follow
 
 ```python
