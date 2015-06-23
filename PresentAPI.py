@@ -133,6 +133,20 @@ class PresentAPI:
         r = requests.put(dpurl, data=payload, headers=headers)
         print(r.text)
         
+    def likePresent(self, presentid):
+        lpurl = self.url + "presents/%s/like" + presentid
+        
+        headers = {'X-Accesstoken': self.accesstoken}
+        
+        requests.post(lpurl, headers=headers)
+        
+    def unlikePresent(self, presentid):
+        lpurl = self.url + "presents/%s/like" + presentid
+        
+        headers = {'X-Accesstoken': self.accesstoken}
+        
+        requests.delete(lpurl, headers=headers)
+        
     def saveImage(self, user):
         filename = "dp/%s.jpg" % user['firstname']
         if not os.path.exists("dp"):
@@ -145,7 +159,16 @@ class PresentAPI:
         with open(filename, "wb") as f:
             f.write(r.content)
         print("Done saving image")
-        
+
+class PresentAPIError(Exception):
+    def __init__(self, status_code, error_type, error_message, *args, **kwargs):
+        self.status_code = status_code
+        self.error_type = error_type
+        self.error_message = error_message
+
+    def __str__(self):
+        return "(%s) %s-%s" % (self.status_code, self.error_type, self.error_message)
+    
         
         
         
