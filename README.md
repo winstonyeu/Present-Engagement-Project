@@ -95,7 +95,7 @@ run()
 
 **PresentFollows class**
 
-Threading follow class to run asynchronously with like class (See below for like class)
+Threaded follow class to run asynchronously with like class (See below for like class)
 
 ```
 init()
