@@ -157,7 +157,7 @@ self.maxtimeindex = 0
 if self.timer.elapsed >= self.maxtime[self.maxtimeindex]:          
 	# Do whatever you want    
 	
-(e.g.)
+(Example)
 if self.timer.elapsed >= self.maxtime[self.maxtimeindex]:          
 	del self.timings[:]
 
