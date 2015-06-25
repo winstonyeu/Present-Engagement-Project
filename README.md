@@ -107,7 +107,7 @@ indicator()
 run()
 ```
 
-**PresentFollows class**
+**PresentFollows & Like class**
 
 Threaded follow class to run asynchronously with like class (See below for like class)
 
