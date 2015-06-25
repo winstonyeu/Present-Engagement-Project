@@ -132,6 +132,7 @@ else:
 ```
 
 **Follow class**
+
 Create custom timing and number of follows
 
 - John joins Present 
@@ -181,17 +182,6 @@ FIRST 8 Minutes:
 - Total Likes in 40 Minutes: 5 Likes
 
 - Total Likes For Video: 14
-
-SECOND DAY:
-
-- 10th Minute = 1 Likes
-- 15th Minute = 2 Likes
-- 20th Minute = 1 Likes
-- 25th Minute = 2 Likes
-- 35th Minute = 1 Likes
-- 45th Minute = 2 Likes
-- 60th Minute = 1 Likes
-- Total Likes For Second Day: 10
 
 ```python
 self.timings = []
