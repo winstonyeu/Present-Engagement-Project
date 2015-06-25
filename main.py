@@ -127,13 +127,14 @@ class Timer(threading.Thread):
         
         if self.timingSize != len(self.timing):
             self.timingSize = len(self.timing)
-            remainingTime = (self.timing[0][0] - (self.timing[0][1] - self.timing[0][0])) - self.tempelapsed
+            try:
+                remainingTime = (self.timing[0][0] - (self.timing[0][0] - self.tempelapsed)) - self.tempelapsed
+            except IndexError:
+                remainingTime = 23 * 60 * 60
             if remainingTime > 0:
                 print("\nWaiting remaining", remainingTime, "seconds")
                 time.sleep(remainingTime+1)
             self.previousTime = 0
-            print("Time elapsed:", self.elapsed)
-            print("Done, continuing with next minute")
 
     
         return False
@@ -180,9 +181,9 @@ class PresentFollows(threading.Thread):
      
         # First hour
         while True:
-            if len(self.alluser) == 0:
-                print("All user followed")
-                break    
+#             if len(self.alluser) == 0:
+#                 print("All user followed")
+#                 break    
             
             if self.timer.tempelapsed >= self.maxtime[self.maxtimeindex]:          
                 del self.timings[:]
@@ -229,105 +230,85 @@ class PresentFollows(threading.Thread):
             
         self.timer.stop = True
 
-# class PresentLikes(threading.Thread):
-#     def __init__(self):
-#         super(PresentLikes, self).__init__()
-#         
-#         self.Login = RetrieveUser()
-#         self.alluser = self.Login.retrieveAll()
-#         
-#         self.timer = Timer()
-#         self.timer.start()
-#          
-#         self.timings = []
-#         self.timings.append([60])
-#         self.timings.append([30, 60])          
-#         self.timings.append([20, 30, 60])
-#         self.timings.append([360])
-#         self.timings.append([10, 30])
-#         self.timer.setTiming(self.timings[0])
-#         
-#         self.index = 0
-#         self.bufferTime = 60
-#         self.timer.bufferTime(self.bufferTime)
-#         
-#         self.maxtime = []
-#         self.maxtime.append(480)
-#         self.maxtimeindex = 0
-#          
-#         self.numoffollower = 0
-#         self.lengthOfFollower = 0
-#     
-#     def run(self):
-#         print("Start")
-#      
-#         # First hour
-#         while True:
-#             if self.timer.tempcurrent2 > self.maxtime[self.maxtimeindex]+1:
-#                 self.index = 0
-#                 
-#                 bufferTime = self.maxtime[self.maxtimeindex]
-#                 self.timer.bufferTime(bufferTime)
-#                 
-#                 del self.timings[:]
-#                 if self.maxtimeindex == 0:    
-#                     self.timings.append([180])
-#                     self.timings.append([180])
-#                     self.maxtimeindex += 1
-#                     print("First 12 minutes down")
-#                 elif self.maxtimeindex == 1:
-#                     self.timings.append([3600, 3600, 3600, 3600, 3600, 3600,
-#                                     3600, 3600, 3600, 3600, 3600])
-#                     self.maxtimeindex += 1
-#                     print("First hour done")
-#                 elif self.maxtimeindex == 2:
-#                     self.timer.tempcurrent2 = 0
-#                     randomfollowersnum = randint(5, 10)
-#                     
-#                     timing = []
-#                     dividedtime = int(self.maxtime[self.maxtimeindex] / randomfollowersnum)
-#                     for time in range(randomfollowersnum):
-#                         timing.append(dividedtime)
-#                     
-#                     self.timings.append(timing) 
-#                 
-#                 self.timer.setTiming(self.timings[0])
-#                 self.timer.resetTiming()
-# 
-#             result = self.timer.indicator()
-#             
-#             if result == 0:
-#                 # Get rand user and login
-#                 randindex = randint(1, len(self.alluser))
-#                 randloginuser = self.Login.retrieveIndividual(randindex)
-#                 #Login.removeIndividual(randloginuser)
-#                 #api.loginUser(randloginuser['email'], randloginuser['password'])
-#                       
-#                 # Follow user
-#                 print(randloginuser['firstname'] + " followed random user")
-#                 self.numoffollower+=1
-#                 print("Followers:", self.numoffollower)
-#                 #api.followUser("123")
-#                 #api.logoutUser()
-#             elif result == 1:
-#                 self.index += 1
-#                 if self.index >= len(self.timings):
-#                     self.index = 0
-#                      
-#                 self.timer.setTiming(self.timings[self.index])
-#                 print("Time elapsed:", self.timer.elapsed)
-#                 print("Done, continuing with next minute")
-#             
-#             if len(self.timer.timing) != 0:
-#                 if self.lengthOfFollower != len(self.timer.timing):
-#                     self.lengthOfFollower = len(self.timer.timing)
-#                     print("\nWaiting",  self.timer.timing[0] - self.timer.previousTime, "seconds until", self.timer.timing[0], "seconds")
-#                 self.timer.previousTime = self.timer.timing[0]
-#         
-#         self.timer.stop = True
+class PresentLikes(threading.Thread):
+    def __init__(self):
+        super(PresentLikes, self).__init__()
+         
+        self.Login = RetrieveUser()
+        self.alluser = self.Login.retrieveAll()
+         
+        self.timer = Timer()
+        self.timer.start()
+          
+        self.timings = []
+        self.timings.append([60])
+        self.timings.append([90, 120])
+        self.timings.append([140, 160, 180])
+        self.timings.append([240])
+        self.timings.append([360, 480])
+        self.timings.append([1200, 1800, 2400, 3000, 3600])
+        self.timer.setTiming(self.timings)
+        
+        self.maxtime = []
+        self.maxtime.append(3600)
+        self.maxtime.append(24 * 60 * 60)
+        self.maxtimeindex = 0
+         
+        self.numofliker = 0
+        self.lengthOfLiker = 0
+    
+    def run(self):
+        print("Start")
+             
+        # First hour
+        while True:
+            if self.timer.tempelapsed >= self.maxtime[self.maxtimeindex]:          
+                del self.timings[:]
+                
+                if self.maxtimeindex == 1:   
+                    self.timer.tempelapsed = 0 
+                    self.timings.append([600])
+                    self.timings.append([750, 900])
+                    self.timings.append([1200])
+                    self.timings.append([1350, 1500])
+                    self.timings.append([2100])
+                    self.timings.append([2400, 2700])
+                    self.timings.append([3600])
+                    self.timer.setTiming(self.timings)
+                    self.maxtimeindex = 0
+                
+                self.maxtimeindex = 1
+ 
+            result = self.timer.indicator()
+            
+            if result:
+                # Get rand user and login
+                randindex = randint(1, len(self.alluser))
+                randloginuser = self.Login.retrieveIndividual(randindex)
+                #Login.removeIndividual(randloginuser)
+                #api.loginUser(randloginuser['email'], randloginuser['password'])
+                      
+                # Like user
+                print(randloginuser['firstname'] + " liked random user")
+                self.numofliker+=1
+                print("Likers:", self.numofliker)
+                #api.likerPresent("123")
+                #api.logoutUser()
+
+            if len(self.timer.timing[0]) != 0:
+                if self.lengthOfLiker != len(self.timer.timing[0]):
+                    self.lengthOfLiker = len(self.timer.timing[0])
+                    print("\nWaiting",  self.timer.timing[0][0] - self.timer.elapsed, "seconds until", self.timer.timing[0][0], "seconds")
+            elif len(self.timer.timing[0]) == 0:
+                self.lengthOfLiker = 0
+                            
+        self.timer.stop = True
         
 if __name__ == "__main__":
-    present = PresentFollows()
-    present.start()
+    follow = PresentFollows()
+    follow.start()
+    
+    like = PresentLikes()
+    like.start()
    
     
