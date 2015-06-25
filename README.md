@@ -1,11 +1,13 @@
 # python-present-engagement
 --------------------------
 A project for Present Engagement using Present API
+
 Refer to Present API for endpoints: https://github.com/winstonyeu/PresentAPI
 
 **Info**
 --------------------------
 Uses Present API to follow and like user posts
+
 Integrates randomuser.me API & RandomAPI to create seed users for Present 
 
 **Authenticatication**
@@ -24,7 +26,9 @@ api.loginUser("email", "password")
 **Authenticating a user for RandomAPI**
 
 Authenticating with RandomAPI allows for more data retrieval from randomuser.me
+
 [Register](https://randomapi.com/) and get the API key from RandomAPI
+
 Save API key into config.ini file
 
 ```
@@ -53,6 +57,7 @@ user     = randomuser.retrieveIndividualByName("scarlett")
 ```
 
 Available user info : firstname, lastname, present id, email, password, profile picture url
+
 Present ID only available after registering with Present
 
 ```python
