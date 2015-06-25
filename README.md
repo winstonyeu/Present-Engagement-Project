@@ -88,7 +88,6 @@ from PresentAPI import PresentAPI
 api = PresentAPI()
 
 randomuser = RetrieveUser()
-randomuser.storeUserInfo()
 users    = randomuser.retrieveAll()
 
 for user in users:
@@ -132,7 +131,8 @@ else:
 	# Do whatever
 ```
 
-**Create custom timing and number of follows**
+**Follow class**
+Create custom timing and number of follows
 
 - John joins Present 
 - 1st Minute: 2 New Followers (10 second mark, 40 second mark)
@@ -160,8 +160,54 @@ self.timings.append([3060, 3260, 3420, 3600])             # 60th minute
 self.timer.setTiming(self.timings)
 ```
 
-It will wait accordingly to the next timing (e.g. 20 secs from 1st minute to 2nd minute as 1st minute ended on 40 sec)
- 
+It will wait accordingly to the next timing (e.g. 20 + 15 secs from 1st min to 2nd min as 1st min ended on 40 sec and 2nd min starts on 75 sec)
+
+**Like class**
+
+FIRST 8 Minutes:
+
+- 1st Minute: 1 Like
+- 2nd Minutes: 2 Likes
+- 3rd Minutes: 3 Likes
+- 6th Minute = 1 Likes
+- 8th Minute =  2 Likes
+- Total Likes in 8 Minutes: 9 Likes
+
+- 20th Minute = 1 Like 
+- 30th Minute = 1 Like 
+- 40th Minute = 1 Like 
+- 50th Minute = 1 Like 
+- 60th Minute = 1 Like 
+- Total Likes in 40 Minutes: 5 Likes
+
+- Total Likes For Video: 14
+
+SECOND DAY:
+
+- 10th Minute = 1 Likes
+- 15th Minute = 2 Likes
+- 20th Minute = 1 Likes
+- 25th Minute = 2 Likes
+- 35th Minute = 1 Likes
+- 45th Minute = 2 Likes
+- 60th Minute = 1 Likes
+- Total Likes For Second Day: 10
+
+```python
+self.timings = []
+# Number of value in list = number of likes (e.g. [60] = 1 like)
+# Value in list = the time it will follow (e.g. 60 = 60 second mark)
+self.timings.append([60])							# 1st minute 1 like on 60 sec mark
+self.timings.append([90, 120])						# 2nd minute 2 like on 90, 120 sec mark
+self.timings.append([140, 160, 180])				# 3rd minute 3 like on 140, 160, 180 sec mark
+self.timings.append([240])							# 6th minute 1 like on 240 sec mark
+self.timings.append([360, 480])						# 8th minute 2 like on 360, 480 sec mark
+self.timings.append([1200, 1800, 2400, 3000, 3600]) # 20, 30, 40, 50, 60th minute each 1 like
+self.timer.setTiming(self.timings)
+```
+
+It will wait accordingly to the next timing (e.g. 20 + 10 secs from 2nd min to 3rd min as 2nd min ended on 120 sec and 3rd min starts on 140 sec)
+
 **Create custom time markers**
 
 ```python
