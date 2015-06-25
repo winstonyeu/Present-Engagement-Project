@@ -46,11 +46,22 @@ Retrieve from csv file
 
 ```python
 randomuser = RetrieveUser()
-randomuser.storeUserInfo()
 
 users    = randomuser.retrieveAll()
 user     = randomuser.retrieveIndividual(0)
-user     = randomuser.retrieveIndividualByName("Brad")
+user     = randomuser.retrieveIndividualByName("scarlett")
+```
+
+Available user info : firstname, lastname, present id, email, password, profile picture url
+Present ID only available after registering with Present
+
+```python
+randomuser = RetrieveUser()
+user     = randomuser.retrieveIndividualByName("scarlett")
+
+print(user['firstname'], user['lastname'], user['id'], user['email'], user['password'], user['picture'])
+
+# scarlett, lowe, 5453ae9h109493857463q183, scarlett.lowe33@example.com, monarch, http://api.randomuser.me/portraits/women/14.jpg
 ```
 
 **Creating Present user**
