@@ -1,5 +1,4 @@
 # python-present-engagement
---------------------------
 A project for Present Engagement using Present API
 
 Refer to Present API for endpoints: https://github.com/winstonyeu/PresentAPI
@@ -149,7 +148,7 @@ Create custom timing and number of follows
 ```python
 self.timings = []
 # Number of value in list = number of follows (e.g. [10, 40] = 2 follows)
-# Value in list = the time it will follow (e.g. 10 = 10 second mark, 40 = 40 second mark)
+# Value in list = the time it will like (e.g. 10 = 10 second mark, 40 = 40 second mark)
 self.timings.append([10, 40])                             # 1st minute 2 follows on 10 & 40 sec mark
 self.timings.append([75, 90, 105, 120])                   # 2nd minute 4 follows on 75, 90, 105, 120 sec mark
 self.timings.append([130, 140, 150, 160, 170, 180])       # 3rd minute
