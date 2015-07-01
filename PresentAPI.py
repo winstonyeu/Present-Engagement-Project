@@ -63,7 +63,7 @@ class PresentAPI:
     
     # Getting newly joined user
     # Not real API, just a fake one to see what it would be like
-    # Real API not done
+    # API not implemented
     def getNewUser(self):
         newuserurl = self.url + "/newuser/" 
         headers = {'X-Accesstoken': self.accesstoken}
@@ -129,19 +129,25 @@ class PresentAPI:
 
         headers = {'X-Accesstoken': self.accesstoken}
         requests.put(dpurl, files = files, headers=headers)
+    
+    def getPresent(self, presentid):
+        purl = self.url + "presents/" + presentid
+        
+        headers = {'X-Accesstoken': self.accesstoken}   
+        r = requests.get(purl, headers=headers)
+        r = r.json()
+        return r
         
     def likePresent(self, presentid):
-        lpurl = self.url + "presents/%s/like" + presentid
+        lpurl = self.url + "presents/%s/like" % presentid
         
-        headers = {'X-Accesstoken': self.accesstoken}
-        
+        headers = {'X-Accesstoken': self.accesstoken}      
         requests.post(lpurl, headers=headers)
         
     def unlikePresent(self, presentid):
-        lpurl = self.url + "presents/%s/like" + presentid
+        lpurl = self.url + "presents/%s/like" % presentid
         
-        headers = {'X-Accesstoken': self.accesstoken}
-        
+        headers = {'X-Accesstoken': self.accesstoken}      
         requests.delete(lpurl, headers=headers)
 
 class PresentAPIError(Exception):

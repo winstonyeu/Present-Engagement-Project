@@ -7,6 +7,7 @@ from colors import red, green
         
 api = PresentAPI()
 config = Configuration.Configuration('config.ini')
+api.loginUser(config['email'], config['password'])
 apikey = config.dictionary['apikey']
 
 class Timer(threading.Thread):
@@ -266,7 +267,11 @@ class PresentLikes(threading.Thread):
         print(green("Like - Start"))
         
         while True:
-            presentID = "123"
+            # presentID = "123"
+            
+            # No present_id in user info, just for show
+            # API not implemented
+            presentID = api.getNewUser()['present_id']
             
             if self.currentpresentid != presentID:
                 # Reset
@@ -347,7 +352,8 @@ if __name__ == "__main__":
 
     follow = PresentFollows()
     follow.start()
-        
+         
     like = PresentLikes()
     like.start()
+    
     
