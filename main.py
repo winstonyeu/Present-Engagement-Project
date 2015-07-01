@@ -137,8 +137,11 @@ class PresentFollows(threading.Thread):
         while True:
             # Get new user
             # E.g.
-            userid = self.alluser[0]['id']
-            self.Login.removeIndividual(self.alluser[0])
+#             userid = self.alluser[0]['id']
+#             self.Login.removeIndividual(self.alluser[0])
+            
+            #Not real API function, check PresentAPI class
+            userid = api.getNewUser()['_id']
             
             if self.currentuserid != userid:
                 # Reset

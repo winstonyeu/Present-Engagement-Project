@@ -61,6 +61,16 @@ class PresentAPI:
         r = r.json()
         return r[0]
     
+    # Getting newly joined user
+    # Not real API, just a fake one to see what it would be like
+    # Real API not done
+    def getNewUser(self):
+        newuserurl = self.url + "/newuser/" 
+        headers = {'X-Accesstoken': self.accesstoken}
+        r = requests.get(newuserurl, headers=headers)
+        r = r.json()
+        return r[0]
+    
     def getfollower(self):
         userurl = self.url + "/users/me/followers?page=1"
         headers = {'content-type': 'application/json', 'X-Accesstoken': self.accesstoken}
