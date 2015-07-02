@@ -7,7 +7,7 @@ from colors import red, green
         
 api = PresentAPI()
 config = Configuration.Configuration('config.ini')
-api.loginUser(config['email'], config['password'])
+api.loginUser(config.dictionary['email'], config.dictionary['password'])
 apikey = config.dictionary['apikey']
 
 class Timer(threading.Thread):
@@ -319,10 +319,10 @@ class PresentLikes(threading.Thread):
 if __name__ == "__main__":
 #     randomuser = RetrieveUser()
 #     users = randomuser.retrieveAll()
-#   
+#    
 #     userid = users[0]['id']
 #     randomuser.removeIndividual(users[0])
-#         
+#          
 #     for user in users:
 #         api.loginUser(user['email'], user['password'])
 #         api.unfollowUser(userid)
@@ -352,7 +352,7 @@ if __name__ == "__main__":
 
     follow = PresentFollows()
     follow.start()
-         
+          
     like = PresentLikes()
     like.start()
     
